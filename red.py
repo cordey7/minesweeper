@@ -401,13 +401,13 @@ class Controller(object):
             self.view.update_mines_left(mines_left)
 
     def win(self):
-        """Sweet sweet victory."""
+        """victory."""
 
         self.model.game_state = "win"
         self.view.display_win()
 
     def loss(self):
-        """Show loss, and reveal all cells."""
+        """you lost show all cells."""
 
         self.model.game_state = "loss"
         self.view.display_loss()
