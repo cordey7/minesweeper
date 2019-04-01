@@ -278,11 +278,7 @@ class TextView(object):
 
 
 class Controller(object):
-    """Sets up button bindings and minesweeper game logic.
-
-    Reveal_decision determines how to reveal cells. 
-    End conditions are handled by the loss and win methods.
-    """
+    """Sets up button bindings and minesweeper game logic."""
 
     def __init__(self, width: int, height: int, 
                  num_mines: int, difficulty: str, view_type: str):
