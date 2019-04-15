@@ -7,7 +7,7 @@ from typing import Set, Tuple
 
 
 def get_adjacent(index: Tuple[int, int]) -> Set[Tuple[int, int]]:
-    """Returns adjacent coordinates for input index"""
+    """returns adjacent coordinates for input index"""
 
     x, y = index
 
@@ -19,7 +19,7 @@ def get_adjacent(index: Tuple[int, int]) -> Set[Tuple[int, int]]:
 
 
 class Model(object):
-    """Creates a board and adds mines to it."""
+    """creates a board and adds mines to it."""
 
     def __init__(self, width: int, height: int, num_mines: int):
         self.width = width
@@ -35,23 +35,22 @@ class Model(object):
         self.game_state = None
 
     def create_grid(self) -> list:
-        """Returns a (width by height) grid of elements with value of 0."""
 
         return [[0] * self.width for _ in range(self.height)]
 
     def add_mines(self):
-        """Randomly adds mines to board grid."""
+        """randomly adds mines to board"""
 
         for x, y in sample(list(product(range(self.width), range(self.height))), self.num_mines):
             self.grid[y][x] = 'm'
 
     def grid_coords(self) -> list:
-        """Returns a list of (x, y) coordinates for every position on grid."""
+        """returns a list of (x, y) coordinates for every position on grid"""
 
         return [(x, y) for y in range(self.height) for x in range(self.width)]
 
     def adjacent_mine_count(self):
-        """Sets cell values to the number of their adjacent mines."""
+        """counts the number of their surrounding mines"""
 
         def is_mine(coords):
             try:
@@ -69,13 +68,13 @@ class Model(object):
                 self.grid[y][x] = grid_value
 
     def get_cell_value(self, index: Tuple[int, int]) -> int or str:
-        """Returns model's cell value at the given index."""
+        """cell value on click"""
 
         x, y = index
         return self.grid[y][x]
 
 class View(Frame):
-    """Creates a GUI with a grid of cell buttons."""
+    """creates a GUI with a grid of cell buttons"""
 
     def __init__(self, width: int, height: int, 
                  num_mines: int, difficulty: str, controller: "Controller"):
@@ -93,7 +92,7 @@ class View(Frame):
         self.master.title('Minesweeper')
 
     def create_buttons(self) -> list:
-        """Create cell button widgets."""
+        """create cell button widgets"""
 
         def create_button(x, y):
             button = Button(self.master, width=5, bg='yellow')
@@ -104,7 +103,7 @@ class View(Frame):
                                      for y in range(self.height)]
 
     def initialize_bindings(self):
-        """Set up the reveal cell and the flag cell key bindings."""
+        """set up the reveal cell and the flag cell key bindings"""
 
         for x in range(self.width):
             for y in range(self.height):
@@ -128,39 +127,39 @@ class View(Frame):
                 '<Button>', lambda event: self.controller.reset(event))
 
     def reset_view(self):
-        """Destroys the GUI. Controller will create a new GUI"""
+        """destroys the GUI. Controller will create a new GUI"""
 
         self.master.destroy()
 
     def reveal_cell(self, index: Tuple[int, int], value: int or str):
-        """Reveals cell's value on GUI."""
+        """reveals cell's value on GUI"""
 
         x, y = index
         self.buttons[y][x].configure(text=value, bg=self.color_dict[value])
 
     def flag_cell(self, index: Tuple[int, int]):
-        """Flag cell in GUI"""
+        """flag cell in GUI"""
 
         x, y = index
         self.buttons[y][x].configure(text="FLAG", bg="yellow")
 
     def unflag_cell(self, index: Tuple[int, int]):
-        """Unflag cell in GUI"""
+        """unflag cell in GUI"""
         x, y = index
         self.buttons[y][x].configure(text="", bg="grey")
 
     def update_mines_left(self, mines: int):
-        """Updates mine counter widget"""
+        """updates mine counter widget"""
 
         self.top_panel.mine_count.set("Mines remaining: " + str(mines))
 
     def display_loss(self):
-        """Display the loss label when lose condition is reached."""
+        """display the loss label when lose condition is reached"""
 
         self.top_panel.loss_label.grid(row=0, columnspan=10)
 
     def display_win(self):
-        """Display the win label when win condition is reached."""
+        """display the win label when win condition is reached"""
 
         self.top_panel.win_label.grid(row=0, columnspan=10)
 
@@ -174,7 +173,7 @@ class View(Frame):
 
 
 class TopPanel(Frame):
-    """Creates a top panel which contains game information."""
+    """creates score board"""
 
     def __init__(self, master: Tk, width: int, height: int, num_mines: int):
         Frame.__init__(self, master)
@@ -194,7 +193,7 @@ class TopPanel(Frame):
 
 
 class TextView(object):
-    """Creates a text interface of the minesweeper game."""
+    """creates a text interface of the minesweeper game"""
 
     def __init__(self, width: int, height: int, 
                  num_mines: int, difficulty: str, controller: "Controller"):
@@ -211,13 +210,13 @@ class TextView(object):
         self.show_grid()
 
     def cell_view(self)-> list:
-        """Create text view of cells."""
+        """create text view of cells"""
 
         return [["cell" for x in range(self.width)] 
                          for y in range(self.height)]
 
     def show_grid(self):
-        """Prints text grid to console. Includes column numbers."""
+        """prints text grid to console. Includes column numbers"""
 
         top_row = [str(i) for i in range(self.width)]
         print(" ", *top_row, sep=" "*5)
@@ -278,9 +277,7 @@ class TextView(object):
 
 
 class Controller(object):
-    """Sets up button bindings and minesweeper game logic.
-
-    """
+    """Sets up button bindings and minesweeper game logic"""
 
     def __init__(self, width: int, height: int, 
                  num_mines: int, difficulty: str, view_type: str):
@@ -307,7 +304,7 @@ class Controller(object):
         self.view.mainloop()
 
     def reveal_decision(self, index: Tuple[int, int]):
-        """Main decision method determining how to reveal cell."""
+        """determine how to reveal cell."""
 
         x, y = index
 
@@ -333,7 +330,7 @@ class Controller(object):
             self.win()
 
     def reveal_cell(self, index: Tuple[int, int], value: int or str):
-        """Obtains cell value from model and passes the value to view."""
+        """obtains cell value from model and passes the value to view"""
 
         if index in self.model.cells_flagged:
             return None
@@ -342,7 +339,7 @@ class Controller(object):
             self.view.reveal_cell(index, value)
 
     def reveal_adjacent(self, index: Tuple[int, int]):
-        """Reveals the 8 adjacent cells to the input cell's index."""
+        """counts the mines of 8 surrounding cells of clicked cell"""
 
         for coords in get_adjacent(index):
             if (
@@ -353,7 +350,7 @@ class Controller(object):
                 self.reveal_cell(coords, cell_value)
 
     def reveal_zeroes(self, index: Tuple[int, int]):
-        """Reveals all adjacent cells just until a mine is reached."""
+        """reveals all cells until a mine is reached"""
 
         val = self.model.get_cell_value(index)
 
@@ -391,7 +388,7 @@ class Controller(object):
         self.update_mines()
 
     def update_mines(self):
-        """Update mine counter."""
+        """update mine counter"""
 
         mines_left = self.num_mines - len(self.model.cells_flagged)
 
@@ -399,7 +396,7 @@ class Controller(object):
             self.view.update_mines_left(mines_left)
 
     def win(self):
-        """victory."""
+        """winner"""
 
         self.model.game_state = "win"
         self.view.display_win()
@@ -418,7 +415,7 @@ class Controller(object):
 
 
 class InitializeGame(Frame):
-    """Sets up minesweepergame. Allows player to choose difficulty"""
+    """starts game. Allows player to choose difficulty"""
 
     def __init__(self):
         self.root = Tk()        
@@ -427,9 +424,9 @@ class InitializeGame(Frame):
         self.root.mainloop()
 
     def create_view_choice(self):
-        "Creates widgets allowing player to choose a view type."""
+        "creates widgets allowing player to choose a view type."""
 
-        self.view_label = Label(self.root, text="Choose a view type")
+        self.view_label = Label(self.root, text="Choose game type")
         self.view_label.grid()
         self.view_types = ["GUI", "TEXT"]
         def create_button(view_type):
@@ -450,9 +447,9 @@ class InitializeGame(Frame):
                     self.set_up_difficulty_widgets, self.view_types[i]))
 
     def create_difficulty_widgets(self):
-        """Set up widgets at start of game for difficulty."""
+        """create buttons for difficulty."""
 
-        self.diff_label = Label(self.root, text="Choose a difficulty")
+        self.diff_label = Label(self.root, text="Choose difficulty")
         self.difficulty = ("Easy", "Medium", "Hard")
         def create_button(difficulty):
             button = Button(self.root, width=7, bg='red', text=difficulty)
@@ -463,7 +460,7 @@ class InitializeGame(Frame):
         self.difficulty_widgets = [self.diff_label] + self.difficulty_widgets
 
     def set_up_difficulty_widgets(self, view_type: str):
-        """Removes view widgets. Sets up difficulty options for view chosen."""
+        """removes view buttons. Sets up difficulty options for view chosen"""
 
         for widget in self.view_widgets:
             widget.grid_remove()
@@ -477,7 +474,7 @@ class InitializeGame(Frame):
         self.bind_difficulty_widgets(view_type)
 
     def bind_difficulty_widgets(self, view_type: str):
-        """Binds difficulty buttons."""
+        """binds difficulty buttons"""
 
         for i in range(1, 4):
             def closure_helper(f, difficulty, view_type):
@@ -489,7 +486,7 @@ class InitializeGame(Frame):
                     self.init_game, self.difficulty[i - 1], view_type))
 
     def init_game(self, difficulty: str, view_type: str):
-        """Begins game."""
+        """starts game"""
 
         self.root.destroy()
         return Controller(*{
